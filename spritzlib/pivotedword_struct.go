@@ -10,7 +10,8 @@ import (
 
 type PivotedWord struct{
   Fore, Mid, Aft string
-  IndentOffset, DelayScore int
+  IndentOffset int
+  DelayScore int
 }
 
 
@@ -37,7 +38,7 @@ func Pivot(word string) (pivoted *PivotedWord, err error) {
         bestLetter = 5
       }
     }
-    delay := delayScoreWord(word)
+    delay := delayPercent(word)
     offset := 6 - bestLetter
     return &PivotedWord{ Fore: word[:bestLetter-1],
                          Mid: word[bestLetter-1:bestLetter],
@@ -50,7 +51,7 @@ func Pivot(word string) (pivoted *PivotedWord, err error) {
 // A "word" gets a boost for:
 // * Ending in punctuation marks.
 // * Being longer than N letters
-func delayScoreWord(word string) int {
+func delayPercent(word string) int {
     wordScore := 0
     rword := []rune(word)
     clearword := make([]rune, 0, len(rword))
@@ -71,7 +72,7 @@ func delayScoreWord(word string) int {
     if len(clearword) > 12 {
       wordScore = wordScore + 1
     }
-    return wordScore
+    return 100 + (10 * wordScore)
 }
 
 func printColours(wd *PivotedWord, embolden bool, pivot_colour, plain_colour, background string) {
@@ -92,10 +93,8 @@ func printColours(wd *PivotedWord, embolden bool, pivot_colour, plain_colour, ba
 }
 
 func (self *PivotedWord) wpmDelay(wpm int) <-chan time.Time {
-  mpw := time.Minute / time.Duration(wpm)  // Minutes Per Word
-  deciDelay := mpw / 10
-  baseDelayFactor := time.Duration(9 * (1 + self.DelayScore))
-  return time.After(baseDelayFactor * deciDelay)
+  MPW := ((time.Minute/100) * time.Duration(self.DelayScore)) / time.Duration(wpm)
+  return time.After(MPW)
 }
 
 func (self *PivotedWord) Length() int {

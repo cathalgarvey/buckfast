@@ -64,8 +64,11 @@ func main() {
   if err != nil {
     log.Fatal(err.Error())
   }
-  err = spritzlib.RenderSpritzed(string(content), *wpm, *boldText, colourNameToCode(*pivotColour), colourNameToCode(*plainColour), colourNameToCode(*bgColour))
+  log.Println("Beginning at", *wpm, "words per minute..")
+  took_seconds, total_wds, final_wpm, err := spritzlib.RenderSpritzed(string(content), *wpm, *boldText, colourNameToCode(*pivotColour), colourNameToCode(*plainColour), colourNameToCode(*bgColour))
   if err != nil {
     log.Fatal(err.Error())
   }
+  log.Println("Finished reading", total_wds, "words in", took_seconds, "seconds")
+  log.Println("Final wpm:", final_wpm)
 }
