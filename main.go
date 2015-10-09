@@ -3,8 +3,10 @@ package main
 import (
   "io/ioutil"
   "log"
+  "strings"
   "github.com/alecthomas/kingpin"
   "github.com/cathalgarvey/buckfast/spritzlib"
+  "github.com/cathalgarvey/buckfast/scrapedia"
 )
 
 var (
@@ -44,10 +46,21 @@ func colourNameToCode(name string) string {
 }
 
 func main() {
+  var (
+    bcontent []byte
+    content string
+    err error
+  )
   kingpin.Parse()
-  log.Println("Opening infile: "+*infile)
-  log.Println("Bold: ", *boldText)
-  content, err := ioutil.ReadFile(*infile)
+  if strings.HasPrefix(*infile, "wikipedia:") {
+    log.Println("Fetching from wikipedia:", strings.TrimPrefix(*infile, "wikiedia:"))
+    content, err = scrapedia.GetMainText("https://en.wikipedia.org/wiki/"+strings.TrimPrefix(*infile, "wikipedia:"))
+  } else {
+    // Default: assume plaintext file and load contents.
+    log.Println("Opening plaintext file: "+*infile)
+    bcontent, err = ioutil.ReadFile(*infile)
+    content = string(bcontent)
+  }
   if err != nil {
     log.Fatal(err.Error())
   }

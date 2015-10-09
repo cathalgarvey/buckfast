@@ -87,7 +87,7 @@ func printColours(wd *PivotedWord, embolden bool, pivot_colour, plain_colour, ba
     Color(plain_colour).Print(wd.Fore).
     Color(pivot_colour).Print(wd.Mid).
     Color(plain_colour).Print(wd.Aft).
-    Color(plain_colour).Print(strings.Repeat(" ", 20-wd.Length())).
+    Color(plain_colour).Print(strings.Repeat(" ", 20-(wd.Length()%20))).
     Reset()
 }
 
