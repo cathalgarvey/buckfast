@@ -10,7 +10,7 @@ import (
 )
 
 var (
-  infile = kingpin.Arg("infile", "file to read in.").Required().String()
+  infile = kingpin.Arg("infile", "File to read. If prefixed with 'wikipedia:', fetches the corresponding wikipedia page instead (needs to be exact target page title)").Required().String()
   wpm = kingpin.Flag("wpm", "Approximate words per minute").Default("400").Short('w').Int()
   pivotColour = kingpin.Flag("pivot-colour", "Preferred pivot colour, one of red, green, blue, yellow, cyan, magenta, white, black.").
     Default("green").
